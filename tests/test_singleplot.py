@@ -9,13 +9,16 @@ testdf2 = test_df['B0_OnlyD_nPV']
 testdf3 = test_df['B0_OnlyB_Kst_892_0_PERR']
 
 @pytest.mark.parametrize('data, expected', [
-    ([1.0, 4.0, 6.0, 7.0], (1.0, 7.0)), ([-44.0, 999.0, 0.45], (-44.0, 999.0))])
+    (pd.Series(data=[1.0, 4.0, 6.0, 7.0], name='m'), (1.0, 7.0)),
+    (pd.Series([-44.0, 999.0, 0.45], name='n'), (-44.0, 999.0))])
 def test_range(data, expected):
-    output = Histogram.get_range(data)
+    hist = Histogram(df=data)
+    output = hist.get_range()
     assert output == expected
 
 @pytest.mark.parametrize('testdf, expected', [
     (testdf1, ['B0', 'M']), (testdf2, ['B0_OnlyD', 'nPV']), (testdf3, ['B0_OnlyB_Kst_892_0', 'PERR'])])
 def test_properties(testdf, expected):
-    v_type, particle, data = Histogram.get_properties(testdf)
+    hist = Histogram(testdf)
+    v_type, particle, data = hist.get_properties()
     assert [particle, v_type] == expected

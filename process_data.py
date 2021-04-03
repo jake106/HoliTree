@@ -10,7 +10,7 @@ def convert_to_df(path, tree_name='DecayTree'):
 
     Inputs:
     path (str)      - Path to root or pkl file, including file name
-    tree_name (str) - Name of tree name in root file, defults to DecayTree
+    tree_name (str) - Name of tree name in root file, defaults to DecayTree
 
     Returns:
     df (dataframe)  - File from "path" input in pandas DataFrame form
@@ -29,4 +29,3 @@ def convert_to_df(path, tree_name='DecayTree'):
 
 
 
-#convert_to_df('mfgsafasfwefem.root')

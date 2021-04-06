@@ -1,5 +1,5 @@
 import pytest
-from process_data import *
+from processing.process_data import *
 
 @pytest.mark.parametrize('path, expect', [
                          ('./tests/root_file.root', pd.DataFrame({'foo': range(5), 'bar':range(5, 10)})),

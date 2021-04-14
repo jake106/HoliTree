@@ -47,4 +47,26 @@ def extract_constraints(variables, constraints):
     return new_vars
     
 
+def exclude_constraints(df, exclude):
+    '''
+    Function to remove un-needed branches from dataframe, to declutter plot 
+    and speed up plotting
 
+    Inputs:
+    df (DataFrame) - Dataframe to be plotted
+    exclude (list) - List of constraints or branch tags to exclude from plot
+
+    Outputs:
+    df (DataFrame) - Trimmed down dataframe, no longer containing unrequired branches   
+    '''
+    print(f'Excluding the tags: {exclude}')
+    for tag in exclude:
+        df = df.filter(regex=f'^((?!_{tag}_).)*$')
+    return df
+
+
+def get_masscomb():
+    '''
+    Function to obtain mass combinations for multiple particles
+    '''
+    pass

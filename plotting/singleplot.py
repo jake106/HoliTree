@@ -57,12 +57,12 @@ class Histogram:
         '''
         df_name = self.df.name.split('_')
         data = self.df.to_numpy()
-        if len(df_name) == 2:
-            v_type = df_name[1]
-            particle = df_name[0]
-        else:
-            v_type = df_name[-1]
-            particle = self.df.name[:-(len(v_type)+1)]
+        #if len(df_name) == 2:
+         #   v_type = df_name[1]
+          #  particle = df_name[0]
+        #else:
+        v_type = df_name[-1]
+        particle = self.df.name[:-(len(v_type)+1)]
 
         return v_type, particle, data
 

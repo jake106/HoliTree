@@ -35,13 +35,15 @@ def separate_vars(variable, df, constraint_list):
 
 
 
-def multiplot(df, variables):
+def multiplot(df, variables, onlyconst):
     '''
     Function to manage plotting of multiple variables
 
     Inputs: df (DataFrame)     - Dataframe of file to be plotted
             variables (list)   - list of variables (str) to plot, separated from unit
                                  by '*' 
+            onlyconst (bool)   - flag to switch off automatic plotting of un-tagged branches
+                                 not in "exclude"
 
     Outputs: Saves HoliTree plot as jpeg file
 
@@ -53,6 +55,8 @@ def multiplot(df, variables):
     cmaps_to_plot = accepted_cmaps[:len(variables)]
     
     for n, (var, cmap) in enumerate(zip(variables, cmaps_to_plot)):
+        if onlyconst and (not '#' in var):
+            continue
         this_df, var, unit = separate_vars(var, df, constraint_list)
         if var == 'noconst':
             continue

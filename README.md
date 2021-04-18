@@ -18,7 +18,7 @@ Positional Arguments:
 Optional Arguments:
 --tags - specify any tagged branches to be plotted
 --exclude - specify any tagged branches to not be plotted
---onlytagged - set to TRUE to only plot tagged branches
+--onlytagged - set to TRUE to only plot tagged branches that are included in --tags
 
 ```
 

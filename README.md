@@ -18,17 +18,21 @@ Positional Arguments:
 Optional Arguments:
 --tags - specify any tagged branches to be plotted
 --exclude - specify any tagged branches to not be plotted
---onlytagged - set to TRUE to only plot tagged branches
+--onlytagged - set to TRUE to only plot tagged branches that are included in --tags
 
 ```
 
 ### Example
 If you have a decay tree with untagged branches, and three seperate tagged ones, called 'tag1', 'tag2' and 'tag3':
 
-To plot only untagged branches, include 'tag1', 'tag2' and 'tag3' in the --exclude argument.
-To plot all branches, simply include 'tag1', 'tag2' and 'tag3' in the --tags argument.
-To plot only the three tagged branches, include them in the --tags flag and also set --onlytagged to true.
-To plot only the 'tag1' branch, include it in --tags argument and set --onlytagged to true.
-To plot only the 'tag1' and untagged branches, include 'tag1' in --tags, and include 'tag2' and 'tag3' in --exclude.
+To plot only untagged branches, include 'tag1', 'tag2' and 'tag3' in the --exclude argument.  
+
+To plot all branches, simply include 'tag1', 'tag2' and 'tag3' in the --tags argument.  
+
+To plot only the three tagged branches, include them in the --tags flag and also set --onlytagged to true.  
+
+To plot only the 'tag1' branch, include it in --tags argument and set --onlytagged to true.  
+
+To plot only the 'tag1' and untagged branches, include 'tag1' in --tags, and include 'tag2' and 'tag3' in --exclude.  
 
 Note: if --onlytagged is false (default), and there are tagged branches not specified in the --tags or --exclude arguments, the HoliTree plot will look bloody horrible.

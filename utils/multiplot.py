@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 from PIL import Image
-from plotting.singleplot import Histogram, same_var_plot
+from utils.singleplot import Histogram, same_var_plot
 
 
 def separate_vars(variable, df, constraint_list):
@@ -54,7 +54,7 @@ def multiplot(df, variables, onlyconst):
     accepted_cmaps = ['spring', 'summer', 'autumn', 'winter', 'cool', 'Wistia', 'copper']
     cmaps_to_plot = accepted_cmaps[:len(variables)]
     
-    for n, (var, cmap) in enumerate(zip(variables, cmaps_to_plot)):
+    for (var, cmap) in zip(variables, cmaps_to_plot):
         if onlyconst and (not '#' in var):
             continue
         this_df, var, unit = separate_vars(var, df, constraint_list)
@@ -62,7 +62,7 @@ def multiplot(df, variables, onlyconst):
             continue
         fname += f'_{var}'
         same_var_plot(this_df, var, unit, cmap)
-    print('Plotting done, beginning stich')
+    print('Plotting done, beginning stich.')
     temp_ims = os.listdir('./temp/')
     ims = [f'./temp/{x}' for x in temp_ims]
     plots = [Image.open(x) for x in ims]

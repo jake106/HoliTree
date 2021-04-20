@@ -1,16 +1,16 @@
-from processing.process_data import convert_to_df, extract_constraints, exclude_constraints
-from plotting.multiplot import multiplot
+from utils.process_data import convert_to_df, extract_constraints, exclude_constraints, get_masscomb
+from utils.multiplot import multiplot
 import argparse
 
 
-def run(path, variables, contraints, exclude, onlyconst):
+def run(path, variables, tags, exclude, onlyconst):
     '''
     Function to run HoliTree tool
 
     Inputs: path (str)         - path to file to be plotted
             variables (list)   - list of variables (str) to plot, separated from unit
                                  by '*'
-            constraints (list) - names of pre-applied constraints in tree
+            tags (list)        - names of pre-applied constraints in tree
             exclude (list)     - names of any branch tags to be excluded fromt the plot 
             onlyconst (bool)   - flag to switch off automatic plotting of un-tagged branches
                                  not in "exclude"
@@ -21,8 +21,8 @@ def run(path, variables, contraints, exclude, onlyconst):
         print('Automatic plotting of untagged variables turned OFF')
     else:
         print('Automatic plotting of untagged variables tuned ON')
-    if constraints:
-        variables = extract_constraints(variables, constraints)
+    if tags:
+        variables = extract_constraints(variables, tags)
     df = convert_to_df(path)
     if exclude:
         df = exclude_constraints(df, exclude)
@@ -51,6 +51,10 @@ if __name__ == '__main__':
     exclude = args.exclude
     onlytagged = args.onlytagged
 
-    run(path, variables, tags, exclude, onlytagged)
+    #run(path, variables, tags, exclude, onlytagged)
+    df = convert_to_df('./DstDK_randompion_tis_df.pkl')
+    variables = extract_constraints(['M*MeV', 'PT*MeV'], ['OnlyD', 'BandDs', 'OnlyB'])
+    df = exclude_constraints(df, ['DTF', 'KasP', 'KasPi', 'PiasK', 'PiasP'])
+    get_masscomb(df, variables, onlyconst=False)
 
 

@@ -82,37 +82,3 @@ def exclude_constraints(df, exclude):
     for tag in exclude:
         df = df.filter(regex=f'^((?!_{tag}_).)*$')
     return df
-
-
-def get_masscomb(df, variables, onlyconst, units='MeV'):
-    '''
-    Function to obtain mass combinations for multiple particles (Defaults to MeV)
-
-    Inputs:
-    df (DataFrame)   - dataframe to be plotted
-    variables (list) - List of variables being plotted, required as it contains tags
-    onlyconst (bool) - flag to indicate wether non-tagged variables are to be plotted
-
-    Outputs:
-    df (DataFrame)   - dataframe with added masses
-    variables (list) - Edited variables list to include mass combinations
-    '''
-    constraint_list = [variable.split('#')[0] for variable in variables if '#' in variable]
-    unique_tags = list(set(constraint_list))
-    if not onlyconst:
-        particles=[]
-        untagged = df.filter(regex='_P.$')
-        for constraint in constraint_list:
-            untagged = untagged.filter(regex=f'^((?!{constraint}).)*$')
-        for branch in untagged.columns:
-            particles.append(branch[:-3])
-        print(list(set(particles)))
-    for tag in unique_tags:
-        pass
-    r = re.compile(f'.*(M\*{units})$')
-    mass_variables = list(filter(r.match, variables))
-    for var in mass_variables:
-        this_df, var, unit = separate_vars(var, df, constraint_list)
-        print(var)
-
-

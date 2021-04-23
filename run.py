@@ -1,4 +1,4 @@
-from utils.process_data import convert_to_df, extract_constraints, exclude_constraints, get_masscomb
+from utils.process_data import convert_to_df, extract_constraints, exclude_constraints
 from utils.multiplot import multiplot
 import argparse
 
@@ -32,11 +32,11 @@ def run(path, variables, tags, exclude, onlyconst):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run HoliTree plotting and save plot to pdf" +
                                      "from inside HoliTree folder.")
-    parser.add_argument('-vars', nargs='+', default=['M*MeV', 'PT*MeV'],
+    parser.add_argument('-vars', nargs='+', default=['M*MeV'],
                         help='Variables to be plotted, in form [var1*unit1, var2*unit2, ...]')
-    parser.add_argument('-path', nargs='?', default='./DstDK_randompion_tis_df.pkl', 
+    parser.add_argument('-path', nargs='?', default='./processed_data/example.pkl', 
                         help='Path to file to be plotted (.root or .pkl)')
-    parser.add_argument('--tags', nargs='+', default=['OnlyD', 'BandDs', 'OnlyB'], 
+    parser.add_argument('--tags', nargs='+', default=['B0_OnlyD', 'B0_BandDs'], 
                         help='List of names of any tagged constraints pre-applied to dataset')
     parser.add_argument('--exclude', nargs='+', default=['DTF', 'KasP', 'KasPi', 'PiasK', 'PiasP'],
                         help='List of names of any constraints to be excluded from the plot')
@@ -51,10 +51,4 @@ if __name__ == '__main__':
     exclude = args.exclude
     onlytagged = args.onlytagged
 
-    #run(path, variables, tags, exclude, onlytagged)
-    df = convert_to_df('./DstDK_randompion_tis_df.pkl')
-    variables = extract_constraints(['M*MeV', 'PT*MeV'], ['OnlyD', 'BandDs', 'OnlyB'])
-    df = exclude_constraints(df, ['DTF', 'KasP', 'KasPi', 'PiasK', 'PiasP'])
-    get_masscomb(df, variables, onlyconst=False)
-
-
+    run(path, variables, tags, exclude, onlytagged)

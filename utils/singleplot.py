@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def same_var_plot(df, var, unit, cmap):
+def same_var_plot(df, var, unit, cmap, prevax):
     '''
     Function to plot a single variable of the HoliTree plot
 
@@ -15,7 +15,11 @@ def same_var_plot(df, var, unit, cmap):
     '''
     plot_len = len(df.columns)
     i = 0
-    fig, ax = plt.subplots(nrows=2*plot_len, ncols=1, sharex=True, figsize=(24, plot_len))
+    if prevax:
+        fig, ax = plt.subplots(nrows=2*plot_len, ncols=1, figsize=(24, plot_len))
+        [x.sharex(prevax) for x in ax]
+    else:
+        fig, ax = plt.subplots(nrows=2*plot_len, ncols=1, sharex=True, figsize=(24, plot_len))
     fig.suptitle(f'{var} / {unit}', fontsize=16, x=0.08, fontweight='bold',
                  y=0.54, rotation='vertical', verticalalignment='center')
     for col in df.columns:
@@ -27,6 +31,7 @@ def same_var_plot(df, var, unit, cmap):
     ax[-1].get_xaxis().set_visible(True)
     ax[-1].spines['bottom'].set_visible(True)
     fig.savefig(f'./temp/temp_{var}.jpeg', bbox_inches='tight')
+    return ax[-1]
 
 
 class Histogram:
@@ -38,12 +43,29 @@ class Histogram:
 
     Call plot to get axes
     '''
-    def __init__(self, df, cm='spring', bins=50):
-        self.bins = bins
+    def __init__(self, df, cm='spring'):
         self.df = df
         self.cm = cm
         self.v_type, self.particle, self.data = self.get_properties()
+        self.bins = self.get_bins()
         self.hist_range = self.get_range()
+    
+    def get_bins(self):
+        '''
+        Function to obtain ideal number of bins to split data across
+
+        Inputs: self
+
+        Outputs: bins(int) - number of bins for histogram, calculated with 
+                             the Freedman-Diaconis rule.
+        '''
+        arranged_data = sorted(self.data)
+        N = len(self.data)
+        q1 = np.median(arranged_data[:int(N/2)])
+        q3 = np.median(arranged_data[int(N/2):])
+        IQR = q3-q1
+        bins = int(2 * (IQR/(N**(1/3))))
+        return bins
 
     def get_properties(self):
         '''

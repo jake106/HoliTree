@@ -54,6 +54,7 @@ def multiplot(df, variables, onlyconst):
     accepted_cmaps = ['spring', 'summer', 'autumn', 'winter', 'cool', 'Wistia', 'copper']
     cmaps_to_plot = accepted_cmaps[:len(variables)]
     
+    prev_var = ''
     for (var, cmap) in zip(variables, cmaps_to_plot):
         if onlyconst and (not '#' in var):
             continue
@@ -61,7 +62,12 @@ def multiplot(df, variables, onlyconst):
         if var == 'noconst':
             continue
         fname += f'_{var}'
-        same_var_plot(this_df, var, unit, cmap)
+        if var.split('_')[-1] == prev_var.split('_')[-1]:
+            ax = axn
+            axn = same_var_plot(this_df, var, unit, cmap, ax)
+        else:
+            axn = same_var_plot(this_df, var, unit, cmap, False)
+        prev_var = var
     print('Plotting done, beginning stich.')
     temp_ims = os.listdir('./temp/')
     ims = [f'./temp/{x}' for x in temp_ims]

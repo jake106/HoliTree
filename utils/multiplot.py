@@ -29,8 +29,8 @@ def separate_vars(variable, df, constraint_list):
     else:
         print(f'Plotting {var} in {unit}')
         this_df = df.filter(regex=f'_{var}$')
-        for constraint in constraint_list:
-            this_df = this_df.filter(regex=f'^((?!{constraint}).)*$')
+    for constraint in constraint_list:
+        this_df = this_df.filter(regex=f'^((?!{constraint}).)*$')
     return this_df, var, unit
 
 
@@ -51,17 +51,23 @@ def multiplot(df, variables, onlyconst):
     fname = 'HoliTree'
     constraint_list = [variable.split('#')[0] for variable in variables if '#' in variable]
 
+    # Add function to recursively update cmaps
     accepted_cmaps = ['spring', 'summer', 'autumn', 'winter', 'cool', 'Wistia', 'copper']
     cmaps_to_plot = accepted_cmaps[:len(variables)]
     
     prev_var = ''
-    for (var, cmap) in zip(variables, cmaps_to_plot):
+    i=0
+    for var in variables:
         if onlyconst and (not '#' in var):
             continue
         this_df, var, unit = separate_vars(var, df, constraint_list)
         if var == 'noconst':
             continue
         fname += f'_{var}'
+        if i == len(accepted_cmaps):
+            i = 0
+        cmap = accepted_cmaps[i]
+        i += 1
         if var.split('_')[-1] == prev_var.split('_')[-1]:
             ax = axn
             axn = same_var_plot(this_df, var, unit, cmap, ax)
@@ -69,7 +75,7 @@ def multiplot(df, variables, onlyconst):
             axn = same_var_plot(this_df, var, unit, cmap, False)
         prev_var = var
     print('Plotting done, beginning stich.')
-    temp_ims = os.listdir('./temp/')
+    temp_ims = sorted(os.listdir('./temp/'))
     ims = [f'./temp/{x}' for x in temp_ims]
     plots = [Image.open(x) for x in ims]
     widths, heights = zip(*(i.size for i in plots))
@@ -84,8 +90,8 @@ def multiplot(df, variables, onlyconst):
         final_im.paste(plot, (0, y_offset))
         y_offset += plot.size[1] + 5
     print('Stitching complete, saving and clearing temp files')
-    final_im.save(f'{fname}.jpeg')
+    final_im.save(f'{fname}.pdf')
     for x in temp_ims:
         os.remove(f'./temp/{x}')
-    print(f'Complete, output saved as: {fname}.jpeg')
+    print(f'Complete, output saved as: {fname}.pdf')
 

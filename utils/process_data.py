@@ -6,9 +6,74 @@ import re
 from utils.multiplot import separate_vars
 
 
+def assess_cuts(cuts):
+    '''
+    Ensures cuts are provided in correct format
+
+    Inputs:
+    cuts (dict) - dictionary defining any cuts to be placed on data
+    '''
+    for cut in cuts:
+        print(f'Assessing {cut}')
+        cut_dict = cuts[cut]
+        assert 'type' in cut_dict.keys(), ('Type of cut must be defined')
+        assert 'var' in cut_dict.keys(), ('What variable are we cuttting on?')
+        if cut_dict['type'] == 'veto':
+            assert len(cut_dict['region'].split(',')) == 2, ('region must have 2 values')
+        elif cut_dict['type'] == 'min' or 'max':
+            assert 'value' in cut_dict.keys(), ('Must define minimum/maximum value')
+
+
+def apply_cuts(df, cuts, tags):
+    '''
+    Applies cuts to branches and creates a new 
+    tag for cut-tagged variables
+    '''
+    dfn = df.copy()
+    for cut in cuts:
+        df_cut = df.copy()
+        print(f'Applying {cut}')
+        cut_dict = cuts[cut]
+        # Handle vetos
+        if cut_dict['type'] == 'veto':
+            lower, upper = cut_dict['region'].split(',')
+            veto_var = cut_dict['var']
+            veto = np.all([float(lower) < df_cut[veto_var], df_cut[veto_var] < float(upper)], axis=0)
+            df_cut = df_cut[~veto]
+        # Handle min cuts
+        elif cut_dict['type'] == 'min':
+            lower = cut_dict['value']
+            min_var = cut_dict['var']
+            df_cut = df_cut[float(lower) < df_cut[min_var]]
+        # Handle max cuts
+        elif cut_dict['type'] == 'max':
+            upper = cut_dict['value']
+            max_var = cut_dict['var']
+            df_cut = df_cut[df_cut[max_var] < float(upper)]
+        # Add to df and tags
+        if len(df_cut) == 0:
+            print(f'No events left after {cut}')
+            continue
+        df_cut = df_cut.add_prefix(f'{cut}_')
+        dfn = pd.concat([dfn, df_cut], axis=1)
+    new_tags = [*cuts]
+    for tag in tags:
+        cut_tags = [f'{cut}_{tag}' for cut in cuts]
+        new_tags += [tag] + cut_tags
+    print('Constructed cuts')
+    return dfn, new_tags
+
+
 def inv_mass(data, particles, energy_label = None):
     '''
     Calculates invariant mass of particle
+
+    Inputs:
+    data (DataFrame) - dataframe containing particle data
+    particles (list) - list of particles to construct mass for
+
+    Outputs:
+    mass (array)     - result of invariant mass calculation
     '''
     if energy_label is not None:
         en = energy_label

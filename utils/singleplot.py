@@ -1,25 +1,29 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from datetime import datetime
 
 
 def same_var_plot(df, var, unit, cmap, prevax):
     '''
     Function to plot a single variable of the HoliTree plot
 
-    Inputs: df (DataFrame) - Dataframe of single variable to be plotted
-            var (str)      - Name of variable for axis labelling
-            unit (str)     - Unit of measurement var is in
-            cmap (str)     - Name of colour map, taken from list in multiplot function
+    Inputs: 
+    df (DataFrame) - Dataframe of single variable to be plotted
+    var (str)      - Name of variable for axis labelling
+    unit (str)     - Unit of measurement var is in
+    cmap (str)     - Name of colour map, taken from list in multiplot function
+    prevax (axis)  - Axis of previous variable if they need to line up
 
-    Outputs: Saves temporary jpeg file to be used in multiplot function
+    Outputs: 
+    Saves temporary jpeg file to be used in multiplot function
     '''
     plot_len = len(df.columns)
     i = 0
     if prevax:
-        fig, ax = plt.subplots(nrows=2*plot_len, ncols=1, figsize=(24, plot_len))
+        fig, ax = plt.subplots(nrows=2*plot_len, ncols=1, figsize=(48, plot_len))
         [x.sharex(prevax) for x in ax]
     else:
-        fig, ax = plt.subplots(nrows=2*plot_len, ncols=1, sharex=True, figsize=(24, plot_len))
+        fig, ax = plt.subplots(nrows=2*plot_len, ncols=1, sharex=True, figsize=(48, plot_len))
     fig.suptitle(f'{var} / {unit}', fontsize=16, x=0.08, fontweight='bold',
                  y=0.54, rotation='vertical', verticalalignment='center')
     for col in df.columns:
@@ -30,7 +34,7 @@ def same_var_plot(df, var, unit, cmap, prevax):
     ax[-1].tick_params(axis='x', labelsize=14)
     ax[-1].get_xaxis().set_visible(True)
     ax[-1].spines['bottom'].set_visible(True)
-    fig.savefig(f'./temp/temp_{var}.jpeg', bbox_inches='tight')
+    fig.savefig(f'./temp/{datetime.now()}_temp_{var}.jpeg', bbox_inches='tight')
     return ax[-1]
 
 
@@ -43,7 +47,7 @@ class Histogram:
 
     Call plot to get axes
     '''
-    def __init__(self, df, cm='spring'):
+    def __init__(self, df, cm):
         self.df = df
         self.cm = cm
         self.v_type, self.particle, self.data = self.get_properties()
@@ -52,12 +56,14 @@ class Histogram:
     
     def get_bins(self):
         '''
-        Function to obtain ideal number of bins to split data across
+        Function to obtain ideal number of bins to split data across.
 
-        Inputs: self
+        Inputs: 
+        self
 
-        Outputs: bins(int) - number of bins for histogram, calculated with 
-                             the Freedman-Diaconis rule.
+        Outputs: 
+        bins(int) - number of bins for histogram, calculated with 
+                    the Freedman-Diaconis rule.
         '''
         arranged_data = sorted(self.data)
         N = len(self.data)
@@ -65,17 +71,22 @@ class Histogram:
         q3 = np.median(arranged_data[int(N/2):])
         IQR = q3-q1
         bins = int(2 * (IQR/(N**(1/3))))
+        # Give dirac delta functions 1 bin
+        if bins < 1:
+            bins = 1
         return bins
 
     def get_properties(self):
         '''
         Function to get properties from the column of a pandas dataframe
 
-        Inputs: self
+        Inputs: 
+        self
 
-        Outputs: v_type(str) - variable type
-                 particle(str) - particle name
-                 data(array) - array of the actual data to be plotted
+        Outputs:
+        v_type (str)   - variable type
+        particle (str) - particle name
+        data (array)   - array of the actual data to be plotted
         '''
         df_name = self.df.name.split('_')
         data = self.df.to_numpy()
@@ -88,9 +99,11 @@ class Histogram:
         '''
         Function to get range of data
         
-        Inputs: self
+        Inputs: 
+        self
         
-        Outputs: hist_range(tuple) - min and max values of data histogram
+        Outputs: 
+        hist_range(tuple) - min and max values of data histogram
         '''
         hist_min = np.min(self.data)
         hist_max = np.max(self.data)
@@ -101,18 +114,24 @@ class Histogram:
         '''
         Function to produce a colour-mapped histogram
 
-        Inputs: self
-                ax(plt axes) - axis to append plot to
+        Inputs: 
+        self
+        ax (plt axes) - axis to append plot to
 
-        Outputs: ax(axarr) - 2-sided axis array with histogram plotted on 
+        Outputs:
+        ax (axarr)    - 2-sided axis array with histogram plotted on 
         '''
         cmap = plt.cm.get_cmap(self.cm)
 
-        n, _, patches = ax[0].hist(self.data, self.bins, density=True, range=self.hist_range)
-        _, _, patches2 = ax[1].hist(self.data, self.bins, density=True)
+        n, _, patches = ax[0].hist(self.data, self.bins, density=True, range=self.hist_range, edgecolor='black', linewidth=1.2)
+        _, _, patches2 = ax[1].hist(self.data, self.bins, density=True, edgecolor='black', linewidth=1.2)
         ax[0].set_ylabel(self.particle, rotation=0)
         ax[0].yaxis.set_label_coords(-0.03, -0.05)
-        col = (n - n.min()) / (n.max() - n.min())
+        # Prevents division by 0 for dirac delta functions
+        if n.max() - n.min() == 0:
+            col = n
+        else:
+            col = (n - n.min()) / (n.max() - n.min())
         for c, p, p2 in zip(col, patches, patches2):
             plt.setp(p, 'facecolor', cmap(c))
             plt.setp(p2, 'facecolor', cmap(c))

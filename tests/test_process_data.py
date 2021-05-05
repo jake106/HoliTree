@@ -1,5 +1,5 @@
 import pytest
-from processing.process_data import *
+from utils.process_data import *
 
 @pytest.mark.parametrize('path, expect', [
                          ('./tests/root_file.root', pd.DataFrame({'foo': range(5), 'bar':range(5, 10)})),
@@ -19,7 +19,7 @@ def test_convert_to_df_error(path, expected_error):
 
 @pytest.mark.parametrize('variables, constraints, expect', [
                          (['M*MeV'], ['OnlyD'], ['M*MeV', 'OnlyD#M*MeV']), 
-                         (['M*MeV', 'P*MeV'], ['OnlyD', 'BandDs'], ['M*MeV', 'P*MeV', 'OnlyD#M*MeV', 'BandDs#M*MeV', 'OnlyD#P*MeV', 'BandDs#P*MeV'])])
+                         (['M*MeV', 'P*MeV'], ['OnlyD', 'BandDs'], ['M*MeV', 'OnlyD#M*MeV', 'BandDs#M*MeV','P*MeV', 'OnlyD#P*MeV', 'BandDs#P*MeV'])])
 def test_extract_constraints(variables, constraints, expect):
     output = extract_constraints(variables, constraints)
     assert output == expect

@@ -1,6 +1,6 @@
 import numpy as np
-from plotting.singleplot import Histogram
-from plotting.multiplot import separate_vars
+from utils.singleplot import Histogram
+from utils.multiplot import separate_vars
 import pytest
 import pandas as pd
 

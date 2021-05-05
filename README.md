@@ -1,9 +1,36 @@
+# Requirements and features
+
 ## Requirements
 Python = 3.8.5
 Pandas = 1.1.3
 Numpy = 1.19.4
 PIL = 8.1.2
 Uproot = 3.10.12
+
+## Features to be added
+- default units for variables
+- Expanded testing and continuous integration
+- allow multiple cuts with single tag
+- make command line output more coherent
+
+# Usage
+
+## Preprocessing data
+```bash
+usage: python preprocess.py -path -untagged_names --tagged_names --tags --combinations --additional_vars
+
+Trims down dataframe to be plotted for faster plotting. Also contains a number of helpers to add mass combinations ect.
+
+Positional arguments:
+-path - path to file to be preprocessed
+-untagged_names - dictionary with keys corresponding to desired plotting names, and items corresponding to names of untagged particles in dataframe
+
+Optional arguments:
+--tagged_names - same as untagged names, for when tagged branches name particles differently  
+--tags - list of names of any tags
+--combinations - dictionary with keys being the names of composite particles, items are names of particles in original tuple that compose these particles
+--additional_vars - any non-kinematic variables to be added (not Px, Py, Pz, E, M)
+```
 
 ## Running HoliTree
 ```bash
@@ -19,8 +46,13 @@ Optional Arguments:
 --tags - specify any tagged branches to be plotted
 --exclude - specify any tagged branches to not be plotted
 --onlytagged - set to TRUE to only plot tagged branches that are included in --tags
+--cuts - define dictionary of cuts to be applied and plotted, fomat defined below
 
 ```
+### Cutting format
+Any number of cuts must be defined as a dictionary in the form:
+
+{'cut1name':{'type':'veto, min or max', 'var':'variable to be cut on', 'region (if veto), value (if min or max)':min/max value, or 2 comma-separated values if veto},cut2name:{...}}
 
 ### Example
 If you have a decay tree with untagged branches, and three seperate tagged ones, called 'tag1', 'tag2' and 'tag3':

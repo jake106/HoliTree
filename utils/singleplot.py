@@ -24,16 +24,20 @@ def same_var_plot(df, var, unit, cmap, prevax):
         [x.sharex(prevax) for x in ax]
     else:
         fig, ax = plt.subplots(nrows=2*plot_len, ncols=1, sharex=True, figsize=(48, plot_len))
-    fig.suptitle(f'{var} / {unit}', fontsize=16, x=0.08, fontweight='bold',
+    fig.suptitle(f'{var} / {unit}', fontsize=24, x=0.08, fontweight='bold',
                  y=0.54, rotation='vertical', verticalalignment='center')
     for col in df.columns:
         this_df = df[col]
         hist = Histogram(this_df, cmap)
         hist.plot(ax=ax[i:i+2])
         i += 2
-    ax[-1].tick_params(axis='x', labelsize=14)
+    ax[-1].tick_params(axis='x', labelsize=16)
     ax[-1].get_xaxis().set_visible(True)
     ax[-1].spines['bottom'].set_visible(True)
+    ax[-1].spines['bottom'].set_linewidth(2)
+    ax[-1].spines['bottom'].set
+    for lab in ax[-1].get_xticklabels():
+        lab.set_weight('bold')
     fig.savefig(f'./temp/{datetime.now()}_temp_{var}.jpeg', bbox_inches='tight')
     return ax[-1]
 
@@ -125,7 +129,7 @@ class Histogram:
 
         n, _, patches = ax[0].hist(self.data, self.bins, density=True, range=self.hist_range, edgecolor='black', linewidth=1.2)
         _, _, patches2 = ax[1].hist(self.data, self.bins, density=True, edgecolor='black', linewidth=1.2)
-        ax[0].set_ylabel(self.particle, rotation=0)
+        ax[0].set_ylabel(rf'${self.particle}$', rotation=0, fontsize=16)
         ax[0].yaxis.set_label_coords(-0.03, -0.05)
         # Prevents division by 0 for dirac delta functions
         if n.max() - n.min() == 0:

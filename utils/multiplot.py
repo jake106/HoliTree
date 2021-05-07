@@ -80,9 +80,9 @@ def multiplot(df, variables, onlyconst):
     plots = [Image.open(x) for x in ims]
     widths, heights = zip(*(i.size for i in plots))
     total_width = min(widths)
-    total_height = sum(heights)
+    total_height = sum(heights)+25
     final_im = Image.new('RGB', (total_width, total_height), color=(255,255,255))
-    y_offset=0
+    y_offset=5
     for plot in plots:
         width, height = plot.size
         if width > total_width:

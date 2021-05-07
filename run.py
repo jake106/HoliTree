@@ -45,13 +45,13 @@ if __name__ == '__main__':
                         help='Variables to be plotted, in form [var1*unit1, var2*unit2, ...]')
     parser.add_argument('-path', nargs='?', default='./processed_data/example.pkl', 
                         help='Path to file to be plotted (.root or .pkl)')
-    parser.add_argument('--tags', nargs='+', default=['B0_OnlyD', 'B0_BandDs'], 
+    parser.add_argument('--tags', nargs='+', default=False, 
                         help='List of names of any tagged constraints pre-applied to dataset')
-    parser.add_argument('--exclude', nargs='+', default=['DTF', 'KasP', 'KasPi', 'PiasK', 'PiasP'],
+    parser.add_argument('--exclude', nargs='+', default=False,
                         help='List of names of any constraints to be excluded from the plot')
-    parser.add_argument('--onlytagged', action='store_true',
+    parser.add_argument('--onlytagged', default=False,
                         help='Flag to ONLY display tagged branches, and no un-tagged ones')
-    parser.add_argument('--cuts', action='store_true',
+    parser.add_argument('--cuts', default=False,
                         help='Define any cuts here as dictionary')
     args = parser.parse_args()
 
@@ -62,7 +62,11 @@ if __name__ == '__main__':
     exclude = args.exclude
     onlytagged = args.onlytagged
     cuts = args.cuts
-    cuts = {'DDKcut': {'type':'veto','var':'KD0D0bar_M', 'region':'5050,5200'}, 
-            'testmin': {'type':'min', 'var':'D0D0bar_M', 'value':'200'}}
+
+    tags = ['B0_OnlyD', 'B0_BandDs']
+    exclude = ['DTF', 'KasP', 'KasPi', 'PiasK', 'PiasP']
+    cuts = {'DDKcut': {'type':'veto','var':'KD0D0bar_M', 'region':'5050,5200'}}
+
+    #        'testmin': {'type':'min', 'var':'D0D0bar_M', 'value':'200'}}
 
     run(path, variables, tags, exclude, onlytagged, cuts)

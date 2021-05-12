@@ -28,6 +28,15 @@ def apply_cuts(df, cuts, tags):
     '''
     Applies cuts to branches and creates a new 
     tag for cut-tagged variables
+
+    Inputs:
+    df (DataFrame) - dataframe to apply cuts to
+    cuts (dict)    - dictionary defining cuts
+    tags (list)    - list of tags
+
+    Outputs:
+    dfn (DataFrame) - Dataframe with added tags including cuts
+    new_tags (list) - list of new tags for cut branches
     '''
     dfn = df.copy()
     for cut in cuts:

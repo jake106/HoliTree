@@ -12,6 +12,7 @@ Uproot = 3.10.12
 - Expanded testing and continuous integration
 - allow multiple cuts with single tag
 - make command line output more coherent
+- compile all preporcessing scripts in single useful package
 
 # Usage
 

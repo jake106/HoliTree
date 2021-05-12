@@ -74,10 +74,13 @@ class Histogram:
         q1 = np.median(arranged_data[:int(N/2)])
         q3 = np.median(arranged_data[int(N/2):])
         IQR = q3-q1
-        bins = int(2 * (IQR/(N**(1/3))))
+        h = (2 * (IQR/(N**(1/3))))
+        r = arranged_data[-1] - arranged_data[0]
         # Give dirac delta functions 1 bin
-        if bins < 1:
+        if h < 0.5:
             bins = 1
+        else:
+            bins = int(r / h)
         return bins
 
     def get_properties(self):
@@ -127,8 +130,8 @@ class Histogram:
         '''
         cmap = plt.cm.get_cmap(self.cm)
 
-        n, _, patches = ax[0].hist(self.data, self.bins, density=True, range=self.hist_range, edgecolor='black', linewidth=1.2)
-        _, _, patches2 = ax[1].hist(self.data, self.bins, density=True, edgecolor='black', linewidth=1.2)
+        n, _, patches = ax[0].hist(self.data, self.bins, density=True, range=self.hist_range, edgecolor='black', linewidth=0.8)
+        _, _, patches2 = ax[1].hist(self.data, self.bins, density=True, edgecolor='black', linewidth=0.8)
         ax[0].set_ylabel(rf'${self.particle}$', rotation=0, fontsize=16)
         ax[0].yaxis.set_label_coords(-0.03, -0.05)
         # Prevents division by 0 for dirac delta functions

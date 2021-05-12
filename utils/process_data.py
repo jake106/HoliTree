@@ -66,9 +66,10 @@ def apply_cuts(df, cuts, tags):
         df_cut = df_cut.add_prefix(f'{cut}_')
         dfn = pd.concat([dfn, df_cut], axis=1)
     new_tags = [*cuts]
-    for tag in tags:
-        cut_tags = [f'{cut}_{tag}' for cut in cuts]
-        new_tags += [tag] + cut_tags
+    if tags:
+        for tag in tags:
+            cut_tags = [f'{cut}_{tag}' for cut in cuts]
+            new_tags += [tag] + cut_tags
     print('Constructed cuts')
     return dfn, new_tags
 

@@ -131,15 +131,11 @@ if __name__ == '__main__':
                         'D0': 'D0', 
                         'D0bar': 'D0bar'},
                         help='Names of output branches and tuple branches for untagged particles')
-    parser.add_argument('--tagged_names', default={'K': 'Kst_892_0_Kplus', 
-                        'Pi': 'Kst_892_0_piplus',
-                        'D0' : 'D0',
-                        'D0bar':'D0bar'},
+    parser.add_argument('--tagged_names', action='store_true',
                         help='Names of output branches and tuple branches for untagged particles')
-    parser.add_argument('--tags', default=['B0_OnlyD', 'B0_BandDs'],
+    parser.add_argument('--tags', action='store_true',
                         help='Names of tags used for pre-tagged branches')
-    parser.add_argument('--combinations', default={'D0': ['D0_Kplus', 'D0_piplus'], 
-                        'D0bar': ['D00_Kplus', 'D00_piplus']},
+    parser.add_argument('--composites', action='store_true',
                          help='Dict describing composite particles')
     parser.add_argument('--additional_vars', action='store_true',
                         help='Define list of additional non-kinematic variables to plot')
@@ -148,15 +144,12 @@ if __name__ == '__main__':
     path = args.path
     untagged_names = args.untagged_names
     tagged_names = args.tagged_names
-    combinations = args.combinations
+    combinations = args.composites
     tags = args.tags
     additional_vars = args.additional_vars
 
     df = convert_to_df(path)
     dfn = trim_down(df, untagged_names, tagged_names, tags, combinations, additional_vars)
-    if combinations:
-        # * in list allows itertools to make combinations from dictionary keys
-        dfm = add_mass_comb(dfn, [*untagged_names], tags)
-        dfm.to_pickle('./processed_data/example.pkl')
-    else:
-        dfn.to_pickle('./processed_data/example.pkl')
+    # * in list allows itertools to make combinations from dictionary keys
+    dfm = add_mass_comb(dfn, [*untagged_names], tags)
+    dfm.to_pickle('./processed_data/MC_randompion.pkl')

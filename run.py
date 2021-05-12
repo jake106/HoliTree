@@ -49,7 +49,7 @@ if __name__ == '__main__':
                         help='List of names of any tagged constraints pre-applied to dataset')
     parser.add_argument('--exclude', nargs='+', default=False,
                         help='List of names of any constraints to be excluded from the plot')
-    parser.add_argument('--onlytagged', default=False,
+    parser.add_argument('--onlytagged', action='store_true',
                         help='Flag to ONLY display tagged branches, and no un-tagged ones')
     parser.add_argument('--cuts', default=False,
                         help='Define any cuts here as dictionary')
@@ -63,8 +63,8 @@ if __name__ == '__main__':
     onlytagged = args.onlytagged
     cuts = args.cuts
 
-    tags = ['B0_OnlyD', 'B0_BandDs']
-    exclude = ['DTF', 'KasP', 'KasPi', 'PiasK', 'PiasP']
+    #tags = ['B0_OnlyD', 'B0_BandDs']
+    exclude = ['DTF', 'KasP', 'KasPi', 'PiasK', 'PiasP', 'B0_OnlyD', 'B0_BandDs']
     cuts = {'DDKcut': {'type':'veto','var':'KD0D0bar_M', 'region':'5050,5200'}}
 
     #        'testmin': {'type':'min', 'var':'D0D0bar_M', 'value':'200'}}

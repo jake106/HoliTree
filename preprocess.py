@@ -152,4 +152,4 @@ if __name__ == '__main__':
     dfn = trim_down(df, untagged_names, tagged_names, tags, combinations, additional_vars)
     # * in list allows itertools to make combinations from dictionary keys
     dfm = add_mass_comb(dfn, [*untagged_names], tags)
-    dfm.to_pickle('./processed_data/MC_randompion.pkl')
+    dfm.to_pickle('./processed_data/MC_noddkveto.pkl')

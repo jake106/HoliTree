@@ -64,7 +64,7 @@ def apply_cuts(df, cuts, tags):
             print(f'No events left after {cut}')
             continue
         df_cut = df_cut.add_prefix(f'{cut}_')
-        dfn = pd.concat([dfn, df_cut], axis=1)
+        dfn = dfn.append(df_cut, ignore_index=True)
     new_tags = [*cuts]
     if tags:
         for tag in tags:

@@ -10,8 +10,8 @@ def merge_pkl(what_data, dftag=False):
     df = pd.DataFrame({})
     for year in years:
         print(f'Merging {year}')
-        tis_df = pd.read_pickle(f'{what_data}/{year}/{what_data}_tis_{end}.pkl')
-        tos_df = pd.read_pickle(f'{what_data}/{year}/{what_data}_tos_{end}.pkl')
+        tis_df = pd.read_pickle(f'./{year}/MC_phsp_tis_noddkveto_{end}.pkl')
+        tos_df = pd.read_pickle(f'./{year}/MC_phsp_tos_noddkveto_{end}.pkl')
         df = df.append([tis_df, tos_df])
         print(len(df['B0_M']))
     df.to_pickle(f'./{what_data}_combined.pkl')
@@ -30,4 +30,4 @@ def tag(path, label):
     print('Saving')
     dfn.to_pickle('./data_vis_plot.pkl')
 
-tag('./processed_data/MC_randompion.pkl', 'randompion')
+merge_pkl('noddkveto')

@@ -52,7 +52,7 @@ class Histogram:
     Call plot to get axes
     '''
     def __init__(self, df, cm):
-        self.df = df
+        self.df = df.dropna()
         self.cm = cm
         self.v_type, self.particle, self.data = self.get_properties()
         self.bins = self.get_bins()
@@ -77,7 +77,7 @@ class Histogram:
         h = (2 * (IQR/(N**(1/3))))
         r = arranged_data[-1] - arranged_data[0]
         # Give dirac delta functions 1 bin
-        if h < 0.5:
+        if h < 0.1:
             bins = 1
         else:
             bins = int(r / h)

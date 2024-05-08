@@ -14,6 +14,10 @@ Uproot = 3.10.12
 - make command line output more coherent
 - compile all preporcessing scripts in single useful package
 
+# Example plot
+
+![Example](https://github.com/jake106/HoliTree/blob/main/HoliTree_M_DDKcut_M.pdf)
+
 # Usage
 
 ## Preprocessing data
@@ -50,6 +54,7 @@ Optional Arguments:
 --cuts - define dictionary of cuts to be applied and plotted, fomat defined below
 
 ```
+
 ### Cutting format
 Any number of cuts must be defined as a dictionary in the form:
 
